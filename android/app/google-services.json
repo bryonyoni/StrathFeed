@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "905767354208",
+    "firebase_url": "https://strathfeed.firebaseio.com",
+    "project_id": "strathfeed",
+    "storage_bucket": "strathfeed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905767354208:android:62ccb6023b0b3bbea5e805",
+        "android_client_info": {
+          "package_name": "com.bry.feed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905767354208-v1qq2jd4abpgssj4gg751cr6d10m46bj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClrsmcZ4SSpAKHf8XU2Wf8tWzPm-Wo_uY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905767354208-v1qq2jd4abpgssj4gg751cr6d10m46bj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

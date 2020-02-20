@@ -5,6 +5,7 @@ import 'package:feed/home_page.dart';
 import 'package:feed/negative_sentiment_page.dart';
 import 'package:feed/positive_sentiment_page.dart';
 import 'package:feed/qr_scan_page.dart';
+import 'package:feed/scanner_page.dart';
 import 'package:feed/sentiment_page.dart';
 import 'package:feed/sign_up_page.dart';
 import 'package:feed/sign_in_page.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         'homepage':(ctx)=>HomePage(),
         'qr-scan-page':(ctx)=>QRScanPage(),
         'sentiment-page':(ctx)=>SentimentPage(),
+        'scan-page':(ctx)=>ScannerPage(),
         'describe-location-page':(ctx)=>DescribeLocationPage(),
         'positive-sentiment-page':(ctx)=>PositiveSentimentPage(),
         'positive-sentiment-page':(ctx)=>PositiveSentimentPage(),
