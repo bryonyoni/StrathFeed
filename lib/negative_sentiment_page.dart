@@ -1,6 +1,12 @@
+import 'dart:collection';
+import 'dart:convert';
+
+import 'package:feed/feedback.dart';
 import 'package:feed/feedback_item.dart';
-import 'package:feed/sentiment_expanation_item.dart';
+import 'package:feed/location.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'sentiment_expanation_item.dart';
 
 class NegativeSentimentPage extends StatefulWidget {
   NegativeSentimentPage({Key key, this.title}) : super(key: key);
@@ -13,13 +19,16 @@ class NegativeSentimentPage extends StatefulWidget {
 
 class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 15.0);
+  List<sugestedItem> mySuggestedItems = myFeedback.loadSomeSuggestedItems(Location.location.areaClass);
+  final TextEditingController _textController =  TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-
     final explanationField = TextField(
       obscureText: false,
       style: style,
+      controller: _textController,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hoverColor: Colors.blue,
@@ -30,16 +39,56 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
       ),
     );
 
+    List encodeToJson(List<sugestedItem>list){
+      List jsonList = List();
+      list.map((item)=>
+          jsonList.add(item.toJson())
+      ).toList();
+      return jsonList;
+    }
+
+    void sendToFirebase(){
+      print('sending to firebase');
+      String explanation = _textController.text;
+      List<sugestedItem> mySelectedSuggestedItems = List();
+      for(sugestedItem item in mySuggestedItems){
+        if(item.isSelected){
+          mySelectedSuggestedItems.add(item);
+        }
+      }
+      String loc = jsonEncode(Location.location).toString();
+
+      String selectedSuggestions = encodeToJson(mySelectedSuggestedItems).toString();
+      print(selectedSuggestions);
+      const url = 'https://strathfeed.firebaseio.com/feedback/negative.json';
+      http.post(url,body: json.encode({
+        'explanation': explanation,
+        'selectedItems': selectedSuggestions,
+        'loc': loc,
+        'time': DateTime.now().toIso8601String(),
+      }),).then((response){
+          Navigator.of(context).pushNamed('feedback-sent-page');
+      }).catchError((error){
+        setState(() {
+          isLoading = false;
+        });
+        print(error.toString());
+        
+      });
+      setState(() {
+        isLoading = true;
+      });
+    }
+
     final continueButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Color(0xff01A0C7),
       child: MaterialButton(
-
         padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
         onPressed: () {},
         child:InkWell(onTap: (){
-          Navigator.of(context).pushNamed('feedback-sent-page');
+          sendToFirebase();
         },child: Text("Submit.",
             textAlign: TextAlign.center,
             style: style.copyWith(
@@ -47,14 +96,32 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
       ),
     );
 
+    List<Widget> getAllOtherOptions(){
+      List<Widget> theLoadedWidgets = List();
+      for(sugestedItem item in mySuggestedItems){
+        theLoadedWidgets.add(
+            InkWell(onTap: (){
+              setState(() {
+                print('item selected: '+item.text);
+                int pos = mySuggestedItems.indexOf(item);
+                mySuggestedItems.remove(item);
+                mySuggestedItems.insert(pos, sugestedItem(text: item.text, isSelected: !item.isSelected));
+              });
+            },child:SentimentExplanationItem(item: item,))
+        );
+      }
+      return theLoadedWidgets;
+    }
+
     return Scaffold(
-      body: Container(
+      body: isLoading? Center(
+        child: CircularProgressIndicator(),
+      ): Container(
         color: Colors.white,
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,20 +148,15 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
                     )
                 ),
                 Container(
-                  height: 400,
+                  height: 200,
                   child: ListView(
-                    children: <Widget>[
-                      SentimentExplanationItem(),
-                      SentimentExplanationItem(),
-                      SentimentExplanationItem(),
-                      SentimentExplanationItem(),
-                    ],
+                    children: getAllOtherOptions()
                   ),
                 ),
               ],
             ),
 
-            SizedBox(height: 60.0),
+            SizedBox(height: 30.0),
             Container(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Row(

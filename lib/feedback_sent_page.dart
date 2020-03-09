@@ -64,8 +64,7 @@ class _MyFeedbackSentPageState extends State<FeedbackSentPage> {
                         fontWeight: FontWeight.bold)
                 ),
                 SizedBox(height: 20.0),
-                Text('You May Be As Descriptive As You Like.Its a great '
-                    'thing to help change your environmentfor the better. '
+                Text('Its a great thing to help change your environment for the better. '
                     'We appreciate the feedback!',
                     style: TextStyle(
                       color: Colors.black54,
@@ -75,7 +74,7 @@ class _MyFeedbackSentPageState extends State<FeedbackSentPage> {
               ],
             ),
 
-            SizedBox(height: 530.0),
+            SizedBox(height: 360.0),
             Container(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Row(

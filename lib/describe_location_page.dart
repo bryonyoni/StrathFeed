@@ -1,5 +1,8 @@
 import 'package:feed/feedback_item.dart';
+import 'package:feed/sentiment_page.dart';
 import 'package:flutter/material.dart';
+
+import 'location.dart';
 
 class DescribeLocationPage extends StatefulWidget {
   DescribeLocationPage({Key key, this.title}) : super(key: key);
@@ -12,6 +15,7 @@ class DescribeLocationPage extends StatefulWidget {
 
 class _MyDescribeLocationPageState extends State<DescribeLocationPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 15.0);
+  final TextEditingController _textController =  TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,12 @@ class _MyDescribeLocationPageState extends State<DescribeLocationPage> {
         padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
         onPressed: () {},
         child:InkWell(onTap: (){
-          Navigator.of(context).pushNamed('sentiment-page');
+          String location = _textController.text.toString();
+          Location.location = Location(location, "boi@guam.com",'lavatory');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SentimentPage()),
+          );
         },child: Text("Submit.",
             textAlign: TextAlign.center,
             style: style.copyWith(
@@ -35,6 +44,7 @@ class _MyDescribeLocationPageState extends State<DescribeLocationPage> {
 
     final descriptionField = TextField(
       obscureText: false,
+      controller: _textController,
       style: style,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -76,7 +86,7 @@ class _MyDescribeLocationPageState extends State<DescribeLocationPage> {
               ],
             ),
 
-            SizedBox(height: 500.0),
+            SizedBox(height: 300.0),
             Container(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Row(

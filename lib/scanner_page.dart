@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:feed/sentiment_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:feed/location.dart';
@@ -34,7 +35,7 @@ class _ScannerPageState extends State<ScannerPage> {
       Map userMap = jsonDecode(decoded);
       print(userMap.toString());
       var user = Location.fromJson(userMap);
-
+      Location.location = user;
       await showCupertinoDialog(
         context: context,
         builder: (context) {
@@ -46,7 +47,11 @@ class _ScannerPageState extends State<ScannerPage> {
                 child: Text("Continue"),
                 onPressed: ((){
                   Navigator.of(context).pushNamed('sentiment-page');
-                  Navigator.pop(context);
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(builder: (context) => SentimentPage(location: user,)),
+//                  );
+//                  Navigator.pop(context);
                 }),
               )
             ],

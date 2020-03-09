@@ -1,17 +1,21 @@
 import 'package:feed/feedback_item.dart';
+import 'package:feed/location.dart';
 import 'package:flutter/material.dart';
 
 class SentimentPage extends StatefulWidget {
-  SentimentPage({Key key, this.title}) : super(key: key);
-  final String title;
+  SentimentPage({Key key, this.location}) : super(key: key);
+  final Location location;
 
   @override
-  _MySentimentPageState createState() => _MySentimentPageState();
+  _MySentimentPageState createState() => _MySentimentPageState(location: location);
 
 }
 
 class _MySentimentPageState extends State<SentimentPage> {
+  _MySentimentPageState({this.location});
+
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 15.0);
+  final Location location;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +55,7 @@ class _MySentimentPageState extends State<SentimentPage> {
                         fontWeight: FontWeight.bold)
                 ),
                 SizedBox(height: 10.0),
-                Text('At: the second floor lavatories, in Sbs building',
+                Text(Location.location.name,
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: 15,

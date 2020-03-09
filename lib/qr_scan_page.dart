@@ -67,7 +67,17 @@ class _MyQRScanPageState extends State<QRScanPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 30.0),
+                SizedBox(height: 10.0),
+                Container(
+                  margin: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: InkWell(onTap: (){
+                    Navigator.of(context).pushNamed('scan-page');
+                  },child: Image(image: AssetImage('assets/scan_qr.png'),
+                    height: 250,
+                    width: 250,
+                  ),
+                  ),
+                ),
                 SizedBox(height: 20.0),
                 Text(barcode,
                   style: TextStyle(

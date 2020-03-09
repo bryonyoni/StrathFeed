@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:feed/feedback_item.dart';
+import 'package:feed/location.dart';
 import 'package:flutter/material.dart';
 
 class PositiveSentimentPage extends StatefulWidget {
@@ -12,6 +15,8 @@ class PositiveSentimentPage extends StatefulWidget {
 
 class _MyPositiveSentimentPageState extends State<PositiveSentimentPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 15.0);
+  final TextEditingController _textController =  TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +24,7 @@ class _MyPositiveSentimentPageState extends State<PositiveSentimentPage> {
     final explanationField = TextField(
       obscureText: false,
       style: style,
+      controller: _textController,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hoverColor: Colors.blue,
@@ -29,16 +35,37 @@ class _MyPositiveSentimentPageState extends State<PositiveSentimentPage> {
       ),
     );
 
+    void sendToFirebase(){
+      String explanation = _textController.text;
+      String loc = jsonEncode(Location.location).toString();
+      const url = 'https://strathfeed.firebaseio.com/feedback/positive.json';
+      http.post(url,body: json.encode({
+        'explanation': explanation,
+        'loc': loc,
+        'time': DateTime.now().toIso8601String()
+      }),).then((response){
+
+        Navigator.of(context).pushNamed('feedback-sent-page');
+      }).catchError((error){
+        setState(() {
+          isLoading = false;
+        });
+        print(error.toString());
+      });
+      setState(() {
+        isLoading = true;
+      });
+    }
+
     final continueButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Color(0xff01A0C7),
       child: MaterialButton(
-
         padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
         onPressed: () {},
         child:InkWell(onTap: (){
-          Navigator.of(context).pushNamed('feedback-sent-page');
+          sendToFirebase();
         },child: Text("Submit.",
             textAlign: TextAlign.center,
             style: style.copyWith(
@@ -47,7 +74,9 @@ class _MyPositiveSentimentPageState extends State<PositiveSentimentPage> {
     );
 
     return Scaffold(
-      body: Container(
+      body: isLoading? Center(
+          child: CircularProgressIndicator(),
+      ) : Container(
         color: Colors.white,
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
@@ -75,7 +104,7 @@ class _MyPositiveSentimentPageState extends State<PositiveSentimentPage> {
               ],
             ),
 
-            SizedBox(height: 500.0),
+            SizedBox(height: 250.0),
             Container(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Row(
