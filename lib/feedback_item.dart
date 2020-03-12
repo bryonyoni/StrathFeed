@@ -44,7 +44,7 @@ class FeedbackItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                  Text(feedbackData.timeOfSending!=null ? DateFormat.yMMMMEEEEd('en_US').format(feedbackData.timeOfSending):"Friday 22 Nov",
+                  Text(feedbackData.timeOfSending!=null ? DateFormat.yMMMMEEEEd('en_US').add_jm().format(feedbackData.timeOfSending):"Friday 22 Nov",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black54,

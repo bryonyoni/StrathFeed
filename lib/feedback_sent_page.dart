@@ -39,11 +39,7 @@ class _MyFeedbackSentPageState extends State<FeedbackSentPage> {
         padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
         onPressed: () {},
         child:InkWell(onTap: (){
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) => HomePage()),
-            ModalRoute.withName('/'),
-          );
+          Navigator.popUntil(context, ModalRoute.withName('/'));
         },child: Text("Finish.",
             textAlign: TextAlign.center,
             style: style.copyWith(

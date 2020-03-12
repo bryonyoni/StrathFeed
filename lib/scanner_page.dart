@@ -39,9 +39,6 @@ class _ScannerPageState extends State<ScannerPage> {
   Future<void> showDialogForFoundLocation(Location user) async {
     bool canVibrate = await Vibrate.canVibrate;
     String found = "We've found you!";
-    if(user.name == "No location set."){
-      found = "Type the location then press enter";
-    }
     if(canVibrate){
       var _type = FeedbackType.success;
       Vibrate.feedback(_type);
@@ -64,6 +61,7 @@ class _ScannerPageState extends State<ScannerPage> {
             FlatButton(
               child: Text('Continue'),
               onPressed: () {
+                Navigator.of(context).pop();
                 Navigator.of(context).pushNamed('sentiment-page');
               },
             ),

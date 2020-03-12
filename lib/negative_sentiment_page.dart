@@ -66,7 +66,9 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
 
       String selectedSuggestions = jsonEncode(mySelectedSuggestedItems).toString();
       print(selectedSuggestions);
-
+      if(explanation==""){
+        explanation = mySelectedSuggestedItems[0].text;
+      }
       String url = 'https://strathfeed.firebaseio.com/feedback/negative.json';
 
       http.post(url,body: json.encode({

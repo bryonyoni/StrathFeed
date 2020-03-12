@@ -129,9 +129,19 @@ class _MyHomePageState extends State<HomePage> {
     }
 
   Widget dialogView(myFeedback item){
+    String statMessage = null;
+    if(item.status == 'unseen'){
+      statMessage = "Your Feedback has been sent! Someone will be sent to fix the issue shortly.";
+    }else if(item.status == 'pending'){
+      statMessage = "Someone has been dispatched to fix the issue you raised";
+    }else{
+      statMessage = "Everything has been taken care of. Thanks for the feedback!";
+    }
     var color = Colors.blue;
     if(item.sentiment =='negative'){
       color = Colors.red;
+    }else{
+      statMessage = "Thanks for the positive feedback!";
     }
     return SingleChildScrollView(
       child: ListBody(
@@ -148,7 +158,7 @@ class _MyHomePageState extends State<HomePage> {
                 fontSize: 11,)
           ),
           SizedBox(height: 10.0),
-          Text(item.status,
+          Text(statMessage,
               style: style.copyWith(
                 color: Colors.lightGreen,
                 fontSize: 11,
@@ -166,7 +176,11 @@ class _MyHomePageState extends State<HomePage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(DateFormat.yMMMMEEEEd('en_US').format(item.timeOfSending)),
+          title: Text(DateFormat.yMMMMEEEEd('en_US').add_jm().format(item.timeOfSending),
+              style: style.copyWith(
+              color: Colors.black54,
+              fontSize: 12)
+        ),
           content: dialogView(item),
           actions: <Widget>[
             FlatButton(

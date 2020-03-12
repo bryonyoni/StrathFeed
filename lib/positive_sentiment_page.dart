@@ -46,7 +46,7 @@ class _MyPositiveSentimentPageState extends State<PositiveSentimentPage> {
 
       String url = 'https://strathfeed.firebaseio.com/feedback.json';
 
-      url = 'https://strathfeed.firebaseio.com/feedback.json';
+      url = 'https://strathfeed.firebaseio.com/feedback/positive.json';
       http.post(url,body: json.encode({
         'explanation': explanation,
         'loc': loc,
