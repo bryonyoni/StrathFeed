@@ -88,7 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
             padding: const EdgeInsets.all(36.0),
             child: ListView(
               children: <Widget>[
-                SizedBox(height: 100.0),
+                SizedBox(height: 70.0),
                 Text(
                   'Sign up for a StrathFeed Account.',
                   style: TextStyle(

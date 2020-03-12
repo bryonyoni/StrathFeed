@@ -78,7 +78,7 @@ class _MySignInState extends State<SignInPage> {
             padding: const EdgeInsets.all(36.0),
             child: ListView(
               children: <Widget>[
-                SizedBox(height: 100.0),
+                SizedBox(height: 70.0),
                 Text('Sign in to your StrathFeed Account.',
                     style: TextStyle(color: Colors.blue,
                         fontSize: 30,

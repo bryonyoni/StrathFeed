@@ -6,6 +6,7 @@ import 'package:feed/feedback_item.dart';
 import 'package:feed/location.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'feedback_sent_page.dart';
 import 'sentiment_expanation_item.dart';
 
 class NegativeSentimentPage extends StatefulWidget {
@@ -58,7 +59,7 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
       }
       String loc = jsonEncode(Location.location).toString();
 
-      String selectedSuggestions = encodeToJson(mySelectedSuggestedItems).toString();
+      String selectedSuggestions = jsonEncode(mySelectedSuggestedItems).toString();
       print(selectedSuggestions);
       const url = 'https://strathfeed.firebaseio.com/feedback/negative.json';
       http.post(url,body: json.encode({
@@ -67,7 +68,14 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
         'loc': loc,
         'time': DateTime.now().toIso8601String(),
       }),).then((response){
-          Navigator.of(context).pushNamed('feedback-sent-page');
+         Navigator.pushAndRemoveUntil(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => FeedbackSentPage()
+            ), 
+            ModalRoute.withName("/HomePage")
+         );
+          // Navigator.of(context).pushNamed('feedback-sent-page');
       }).catchError((error){
         setState(() {
           isLoading = false;
@@ -116,59 +124,62 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
     return Scaffold(
       body: isLoading? Center(
         child: CircularProgressIndicator(),
-      ): Container(
-        color: Colors.white,
-        width: double.infinity,
-        padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Column(
+      ): Stack(
+        children: <Widget>[
+          Container(
+            color: Colors.white,
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('What Seems To Be The Problem?',
-                    style: TextStyle(color: Colors.blue,
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold)
-                ),
-                SizedBox(height: 20.0),
-                Text('You May Be As Descriptive As You Like.',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 15,
-                    )
-                ),
-                SizedBox(height: 30.0),
-                explanationField,
-                SizedBox(height: 50.0),
-                Text('Alternatively, you can pick some of these options.',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 15,
-                    )
-                ),
-                Container(
-                  height: 200,
-                  child: ListView(
-                    children: getAllOtherOptions()
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('What Seems To Be The Problem?',
+                        style: TextStyle(color: Colors.blue,
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold)
+                    ),
+                    SizedBox(height: 20.0),
+                    Text('You May Be As Descriptive As You Like.',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15,
+                        )
+                    ),
+                    SizedBox(height: 30.0),
+                    explanationField,
+                    SizedBox(height: 50.0),
+                    Text('Alternatively, you can pick some of these options.',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15,
+                        )
+                    ),
+                    Container(
+                      height: 200,
+                      child: ListView(
+                        children: getAllOtherOptions()
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-
-            SizedBox(height: 30.0),
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(height: 20.0),
-                  continueButton,
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+          Container(
+            alignment: Alignment.bottomRight,
+            padding: EdgeInsets.fromLTRB(10, 0, 40, 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(height: 20.0),
+                continueButton,
+              ],
+            ),
+          )
+        ],
       ),
     );
 

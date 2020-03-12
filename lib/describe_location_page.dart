@@ -25,7 +25,6 @@ class _MyDescribeLocationPageState extends State<DescribeLocationPage> {
       borderRadius: BorderRadius.circular(30.0),
       color: Color(0xff01A0C7),
       child: MaterialButton(
-
         padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
         onPressed: () {},
         child:InkWell(onTap: (){
@@ -57,48 +56,51 @@ class _MyDescribeLocationPageState extends State<DescribeLocationPage> {
     );
 
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        width: double.infinity,
-        padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Column(
+      body: Stack(
+        children: <Widget>[
+          Container(
+            color: Colors.white,
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text('Describe where you think you are.',
-                    style: TextStyle(color: Colors.blue,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Describe where you think you are.',
+                        style: TextStyle(color: Colors.blue,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold)
+                    ),
+                    SizedBox(height: 10.0),
+                    Text('For instance: Second floor lavatory, near the '
+                        'Telecommunications Lab, Phase 1 Building.',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15,
+                        )
+                    ),
+                    SizedBox(height: 10.0),
+                    descriptionField,
+                  ],
                 ),
-                SizedBox(height: 10.0),
-                Text('For instance: Second floor lavatory, near the '
-                    'Telecommunications Lab, Phase 1 Building.',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 15,
-                    )
-                ),
-                SizedBox(height: 10.0),
-                descriptionField,
               ],
             ),
-
-            SizedBox(height: 300.0),
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(height: 20.0),
-                  continueButton,
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+          Container(
+            alignment: Alignment.bottomRight,
+            padding: EdgeInsets.fromLTRB(10, 0, 40, 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(height: 20.0),
+                continueButton,
+              ],
+            ),
+          )
+        ],
       ),
     );
 

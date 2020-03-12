@@ -47,46 +47,50 @@ class _MyFeedbackSentPageState extends State<FeedbackSentPage> {
     );
 
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        width: double.infinity,
-        padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Column(
+      body: Stack(
+        children:<Widget>[
+          Container(
+            color: Colors.white,
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text('Your feedback has been Sent.',
-                    style: TextStyle(color: Colors.blue,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold)
-                ),
-                SizedBox(height: 20.0),
-                Text('Its a great thing to help change your environment for the better. '
-                    'We appreciate the feedback!',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 15,
-                    )
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Your feedback has been Sent.',
+                        style: TextStyle(color: Colors.blue,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold)
+                    ),
+                    SizedBox(height: 20.0),
+                    Text('Its a great thing to help change your environment for the better. '
+                        'We appreciate the feedback!',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15,
+                        )
+                    ),
+                  ],
                 ),
               ],
             ),
+          ),
+          Container(
+            alignment: Alignment.bottomRight,
+            padding: EdgeInsets.fromLTRB(10, 0, 40, 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(height: 20.0),
+                continueButton,
+              ],
+            ),
+          )
+        ]
 
-            SizedBox(height: 360.0),
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(height: 20.0),
-                  continueButton,
-                ],
-              ),
-            )
-          ],
-        ),
       ),
     );
 

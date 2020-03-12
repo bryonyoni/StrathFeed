@@ -4,6 +4,7 @@ import 'package:feed/feedback.dart';
 import 'package:feed/feedback_item.dart';
 import 'package:feed/location.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'authentication.dart';
@@ -68,7 +69,7 @@ class _MyHomePageState extends State<HomePage> {
 
       
       setState(() {
-        myLoadedFeedbacks = loadedFeedbacks;
+        myLoadedFeedbacks = loadedFeedbacks.reversed.toList();
         isLoading = false;  
       });
     }catch(error){
@@ -90,11 +91,42 @@ class _MyHomePageState extends State<HomePage> {
       List<Widget> theLoadedWidgets = List();
       for(myFeedback item in myLoadedFeedbacks){
         theLoadedWidgets.add(
-            FeedbackItem(feedbackData: item,)
+            InkWell(onTap: () async {
+              showDialogForFoundLocation(item);
+            },child: FeedbackItem(feedbackData: item,))
         );
       }
       return theLoadedWidgets;
     }
+
+  Future<void> showDialogForFoundLocation(myFeedback item) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(DateFormat.yMMMMEEEEd('en_US').format(item.timeOfSending)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(item.description),
+                Text(item.sentiment),
+                Text(item.location.name)
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,11 +148,10 @@ class _MyHomePageState extends State<HomePage> {
                 ),
                 InkWell(onTap: () async {
                   //  await Provider.of<Auth>(context, listen: false).logout();
-
                   Navigator.of(context).pushNamed('feedback-sent-page');
                 },child: Image(image: AssetImage('assets/chat_icon.png'),
-                    height: 35,
-                    width: 35,
+                    height: 0,
+                    width: 0,
                   ),
                 )
               ],

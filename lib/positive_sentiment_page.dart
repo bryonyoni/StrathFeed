@@ -76,47 +76,50 @@ class _MyPositiveSentimentPageState extends State<PositiveSentimentPage> {
     return Scaffold(
       body: isLoading? Center(
           child: CircularProgressIndicator(),
-      ) : Container(
-        color: Colors.white,
-        width: double.infinity,
-        padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Column(
+      ) : Stack(
+        children: <Widget>[
+          Container(
+            color: Colors.white,
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(40, 70, 40, 20),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text('What do you really Like about here?',
-                    style: TextStyle(color: Colors.blue,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('What do you really Like about here?',
+                        style: TextStyle(color: Colors.blue,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold)
+                    ),
+                    SizedBox(height: 20.0),
+                    Text('You May Be As Descriptive As You Like.',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15,
+                        )
+                    ),
+                    SizedBox(height: 30.0),
+                    explanationField,
+                  ],
                 ),
-                SizedBox(height: 20.0),
-                Text('You May Be As Descriptive As You Like.',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 15,
-                    )
-                ),
-                SizedBox(height: 30.0),
-                explanationField,
               ],
             ),
-
-            SizedBox(height: 250.0),
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(height: 20.0),
-                  continueButton,
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+          Container(
+            alignment: Alignment.bottomRight,
+            padding: EdgeInsets.fromLTRB(10, 0, 40, 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(height: 20.0),
+                continueButton,
+              ],
+            ),
+          )
+        ],
       ),
     );
 

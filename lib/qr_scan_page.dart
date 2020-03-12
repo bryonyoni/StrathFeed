@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 //import 'package:barcode_scan/barcode_scan.dart';
 
 class QRScanPage extends StatefulWidget {
@@ -22,7 +23,8 @@ class _MyQRScanPageState extends State<QRScanPage> {
 
   @override
   Widget build(BuildContext context) {
-
+    // getSinglePermissionStatus();
+    // requestPermissions();
     final continueButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -69,9 +71,10 @@ class _MyQRScanPageState extends State<QRScanPage> {
                 ),
                 SizedBox(height: 10.0),
                 Container(
-                  margin: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: InkWell(onTap: (){
-                    Navigator.of(context).pushNamed('scan-page');
+//                    Navigator.of(context).pushNamed('scan-page');
+                    requestPermissions();
                   },child: Image(image: AssetImage('assets/scan_qr.png'),
                     height: 250,
                     width: 250,
@@ -112,6 +115,20 @@ class _MyQRScanPageState extends State<QRScanPage> {
       ),
     );
 
+
+  }
+
+
+  requestPermissions() async {
+    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.camera);
+    print(permission.toString());
+
+    if(permission.toString() != "PermissionStatus.granted"){
+      Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.camera]);
+      requestPermissions();
+    }else{
+      Navigator.of(context).pushNamed('scan-page');
+    }
 
   }
 

@@ -25,7 +25,6 @@ class _MySentimentPageState extends State<SentimentPage> {
       borderRadius: BorderRadius.circular(30.0),
       color: Color(0xff01A0C7),
       child: MaterialButton(
-
         padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
         onPressed: () {},
         child:InkWell(onTap: (){
@@ -71,8 +70,8 @@ class _MySentimentPageState extends State<SentimentPage> {
                   InkWell(onTap: (){
                     Navigator.of(context).pushNamed('negative-sentiment-page');
                     },child: Image(image: AssetImage('assets/frown_face.png'),
-                        height: 100,
-                        width: 100,
+                        height: 80,
+                        width: 80,
                       ),
                   ),
                   Container(
@@ -83,7 +82,7 @@ class _MySentimentPageState extends State<SentimentPage> {
                         Text('Mostly Dissapointed.',
                             style: TextStyle(
                               color: Colors.blue,
-                              fontSize: 22,
+                              fontSize: 20,
                             )
                         ),
                         SizedBox(height: 10.0),
@@ -107,8 +106,8 @@ class _MySentimentPageState extends State<SentimentPage> {
                   InkWell(onTap: (){
                     Navigator.of(context).pushNamed('positive-sentiment-page');
                   },child: Image(image: AssetImage('assets/happy_face.png'),
-                      height: 100,
-                      width: 100,
+                      height: 80,
+                      width: 80,
                     ),
                   ),
                   Container(
@@ -119,7 +118,7 @@ class _MySentimentPageState extends State<SentimentPage> {
                         Text('Really Satisfied.',
                             style: TextStyle(
                               color: Colors.blue,
-                              fontSize: 22,
+                              fontSize: 20,
                             )
                         ),
                         SizedBox(height: 10.0),
@@ -135,17 +134,7 @@ class _MySentimentPageState extends State<SentimentPage> {
                 ],
               ),
             ),
-            SizedBox(height: 370.0),
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(height: 20.0),
-                  continueButton,
-                ],
-              ),
-            )
+            
           ],
         ),
       ),
