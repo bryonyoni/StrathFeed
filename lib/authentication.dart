@@ -30,10 +30,9 @@ class Auth with ChangeNotifier {
     return _userId;
   }
 
-  Future<void> _authenticate(
-      String email, String password, String urlSegment) async {
-    final url =
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$urlSegment?key=AIzaSyCJqSbToeZGAdItBGa9fWMCW0vzqoLa-Ok';
+  Future<bool> _authenticate(String email, String password, String urlSegment) async {
+    bool isSuccessful = true;
+    final url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$urlSegment?key=AIzaSyCJqSbToeZGAdItBGa9fWMCW0vzqoLa-Ok';
     try {
       final response = await http.post(
         url,
@@ -47,7 +46,8 @@ class Auth with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
-        throw HttpException(responseData['error']['message']);
+        isSuccessful = false;
+//        throw HttpException(responseData['error']['message']);
       }
       _token = responseData['idToken'];
       _userId = responseData['localId'];
@@ -70,15 +70,16 @@ class Auth with ChangeNotifier {
       );
       prefs.setString('userData', userData);
     } catch (error) {
-      throw error;
+      isSuccessful = false;
     }
+    return isSuccessful;
   }
 
-  Future<void> signup(String email, String password) async {
+  Future<bool> signup(String email, String password) async {
     return _authenticate(email, password, 'signupNewUser');
   }
 
-  Future<void> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     return _authenticate(email, password, 'verifyPassword');
   }
 

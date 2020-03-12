@@ -6,6 +6,7 @@ import 'package:feed/feedback_item.dart';
 import 'package:feed/location.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'feedback_sent_page.dart';
 import 'sentiment_expanation_item.dart';
 
@@ -48,7 +49,7 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
       return jsonList;
     }
 
-    void sendToFirebase(){
+    Future<void> sendToFirebase() async {
       print('sending to firebase');
       String explanation = _textController.text;
       List<sugestedItem> mySelectedSuggestedItems = List();
@@ -59,20 +60,28 @@ class _MyNegativeSentimentPageState extends State<NegativeSentimentPage> {
       }
       String loc = jsonEncode(Location.location).toString();
 
+      final prefs = await SharedPreferences.getInstance();
+      final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
+      final user = extractedUserData['userId'];
+
       String selectedSuggestions = jsonEncode(mySelectedSuggestedItems).toString();
       print(selectedSuggestions);
-      const url = 'https://strathfeed.firebaseio.com/feedback/negative.json';
+
+      String url = 'https://strathfeed.firebaseio.com/feedback/negative.json';
+
       http.post(url,body: json.encode({
         'explanation': explanation,
         'selectedItems': selectedSuggestions,
+        'user':user,
         'loc': loc,
+        'status': "unseen",
         'time': DateTime.now().toIso8601String(),
       }),).then((response){
          Navigator.pushAndRemoveUntil(
-            context, 
+            context,
             MaterialPageRoute(
               builder: (context) => FeedbackSentPage()
-            ), 
+            ),
             ModalRoute.withName("/HomePage")
          );
           // Navigator.of(context).pushNamed('feedback-sent-page');

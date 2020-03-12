@@ -1,4 +1,5 @@
 import 'package:feed/feedback_item.dart';
+import 'package:feed/home_page.dart';
 import 'package:flutter/material.dart';
 
 class FeedbackSentPage extends StatefulWidget {
@@ -38,7 +39,11 @@ class _MyFeedbackSentPageState extends State<FeedbackSentPage> {
         padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0),
         onPressed: () {},
         child:InkWell(onTap: (){
-          Navigator.of(context).pushNamed('homepage');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+            ModalRoute.withName('/'),
+          );
         },child: Text("Finish.",
             textAlign: TextAlign.center,
             style: style.copyWith(

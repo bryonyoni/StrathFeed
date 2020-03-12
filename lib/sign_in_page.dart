@@ -20,21 +20,48 @@ class _MySignInState extends State<SignInPage> {
   Widget build(BuildContext context) {
 
     Future<void> signup() async {
-    setState(() {
-      _loading = true;
-    });
+      setState(() {
+        _loading = true;
+      });
 
-    await Provider.of<Auth>(context, listen: false)
-        .login(_textControllerEmail.text, _textControllerPassword.text);
-    
-    setState(() {
-      _loading = false;
-    });
+      bool isComplete = await Provider.of<Auth>(context, listen: false)
+          .login(_textControllerEmail.text, _textControllerPassword.text);
 
+      if(isComplete){
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed('homepage');
+        _loading = false;
+      }else{
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Login Not Successful"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text("Please type your email and password again and retry."),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
 
-    Navigator.of(context).pop();
-    Navigator.of(context).pushNamed('homepage');
-  }
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
 
     final emailField = TextField(
       obscureText: false,

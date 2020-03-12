@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'authentication.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,56 +25,78 @@ class _MyHomePageState extends State<HomePage> {
   List<myFeedback> myLoadedFeedbacks = [];
   bool isLoading = false;
 
+  Future<String> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final user = extractedUserData['userId'];
+    print(user);
+
+    return user;
+  }
+
   Future<void> fetchAndSetFeedbackProducts() async {
-    const url = 'https://strathfeed.firebaseio.com/feedback.json';
+    final prefs = await SharedPreferences.getInstance();
+    final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final me = extractedUserData['userId'];
+
+    String url = 'https://strathfeed.firebaseio.com/feedback.json';
+
     try{
       final response = await http.get(url);
       final loadedData = json.decode(response.body) as Map<String,dynamic>;
-    
+      print(loadedData.toString());
       List<myFeedback> loadedFeedbacks = [];
 
-      loadedData.forEach((sentiment, feedList){
-        print(sentiment);
-        print(feedList);
-        feedList.forEach((feedId, feedData){
-          String explanation = feedData['explanation'];
-          DateTime time = null;
-          if(feedData['time']!=null){
-            time = DateTime.parse(feedData['time']);
-          }
-          final location = json.decode(feedData['loc']) as Map<String,dynamic>;
-          String locationName = ""; 
-          String locationAreaClass = "";
-          String email = "";
-          location.forEach((locItemName,locItemData){
-            if(locItemName == "name"){
-              locationName = locItemData;
-            }else if(locItemName =="areaClass"){
-              locationAreaClass = locItemData;
-            }else if(locItemName == "email"){
-              email = locItemData;
+      if(loadedData != null && loadedData.isNotEmpty){
+        loadedData.forEach((sentiment, feedList){
+          print("sentiment: "+sentiment);
+//          print("list: "+feedList.toString());
+          feedList.forEach((feedId, feedData){
+            String explanation = feedData['explanation'];
+            String user = feedData['user'];
+            String feedbackId = feedId;
+            String status = "Ok";
+            if(feedData['status']!=null) status = feedData['status'];
+            DateTime time = null;
+            if(feedData['time']!=null){
+              time = DateTime.parse(feedData['time']);
             }
+            final location = json.decode(feedData['loc']) as Map<String,dynamic>;
+            String locationName = "";
+            String locationAreaClass = "";
+            String email = "";
+            location.forEach((locItemName,locItemData){
+              if(locItemName == "name"){
+                locationName = locItemData;
+              }else if(locItemName =="areaClass"){
+                locationAreaClass = locItemData;
+              }else if(locItemName == "email"){
+                email = locItemData;
+              }
+            });
+            Location theLocation = new Location(locationName, locationAreaClass, email);
+
+            myFeedback mf = myFeedback();
+            mf.location = theLocation;
+            mf.user = user;
+            mf.pushId = feedbackId;
+            mf.status = status;
+            mf.description = explanation;
+            mf.sentiment = sentiment;
+            if(time!=null)mf.timeOfSending = time;
+
+            if(mf.user == me) loadedFeedbacks.add(mf);
+
           });
-          Location theLocation = new Location(locationName, locationAreaClass, email);
-
-          myFeedback mf = myFeedback();
-          mf.location = theLocation;
-          mf.description = explanation;
-          mf.sentiment = sentiment;
-          if(time!=null)mf.timeOfSending = time;
-
-          loadedFeedbacks.add(mf);
-
         });
-      });
-
+      }
       
       setState(() {
         myLoadedFeedbacks = loadedFeedbacks.reversed.toList();
         isLoading = false;  
       });
     }catch(error){
-      print(error.toString());
+      print("Error: "+error.toString());
     }
   } 
 
@@ -89,7 +112,13 @@ class _MyHomePageState extends State<HomePage> {
 
   List<Widget> getAllFeedbackWidgets(){
       List<Widget> theLoadedWidgets = List();
-      for(myFeedback item in myLoadedFeedbacks){
+      if(myLoadedFeedbacks.isEmpty){
+        theLoadedWidgets.add(Center(
+          child: Container(
+            child: Text("Your passed feedback will appear here."),
+          ),
+        ));
+      }else for(myFeedback item in myLoadedFeedbacks){
         theLoadedWidgets.add(
             InkWell(onTap: () async {
               showDialogForFoundLocation(item);
@@ -99,6 +128,38 @@ class _MyHomePageState extends State<HomePage> {
       return theLoadedWidgets;
     }
 
+  Widget dialogView(myFeedback item){
+    var color = Colors.blue;
+    if(item.sentiment =='negative'){
+      color = Colors.red;
+    }
+    return SingleChildScrollView(
+      child: ListBody(
+        children: <Widget>[
+          Text(item.location.name,
+          style: style.copyWith(
+              color: Colors.black45,
+              fontSize: 12)
+          ),
+          SizedBox(height: 10.0),
+          Text(item.description,
+              style: style.copyWith(
+                color: color,
+                fontSize: 11,)
+          ),
+          SizedBox(height: 10.0),
+          Text(item.status,
+              style: style.copyWith(
+                color: Colors.lightGreen,
+                fontSize: 11,
+              )
+          ),
+        ],
+      ),
+    );
+
+  }
+
   Future<void> showDialogForFoundLocation(myFeedback item) async {
     return showDialog<void>(
       context: context,
@@ -106,15 +167,7 @@ class _MyHomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(DateFormat.yMMMMEEEEd('en_US').format(item.timeOfSending)),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(item.description),
-                Text(item.sentiment),
-                Text(item.location.name)
-              ],
-            ),
-          ),
+          content: dialogView(item),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),

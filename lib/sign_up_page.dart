@@ -25,15 +25,43 @@ class _SignUpPageState extends State<SignUpPage> {
       _loading = true;
     });
 
-    await Provider.of<Auth>(context, listen: false)
+    bool isComplete = await Provider.of<Auth>(context, listen: false)
         .signup(_textControllerEmail.text, _textControllerPassword.text);
-    
-    setState(() {
+
+    if(isComplete){
+      Navigator.of(context).pop();
+      Navigator.of(context).pushNamed('homepage');
       _loading = false;
-    });   
-   
-    Navigator.of(context).pop();
-    Navigator.of(context).pushNamed('homepage');
+    }else{
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Sign Up Not Successful"),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text("Please type your email and password again and retry."),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override

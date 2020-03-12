@@ -38,7 +38,10 @@ class _ScannerPageState extends State<ScannerPage> {
 
   Future<void> showDialogForFoundLocation(Location user) async {
     bool canVibrate = await Vibrate.canVibrate;
-
+    String found = "We've found you!";
+    if(user.name == "No location set."){
+      found = "Type the location then press enter";
+    }
     if(canVibrate){
       var _type = FeedbackType.success;
       Vibrate.feedback(_type);
@@ -49,7 +52,7 @@ class _ScannerPageState extends State<ScannerPage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('We\'ve found you!'),
+          title: Text(found),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[

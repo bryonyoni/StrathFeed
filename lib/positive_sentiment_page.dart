@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:feed/feedback_item.dart';
 import 'package:feed/location.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PositiveSentimentPage extends StatefulWidget {
   PositiveSentimentPage({Key key, this.title}) : super(key: key);
@@ -35,13 +36,22 @@ class _MyPositiveSentimentPageState extends State<PositiveSentimentPage> {
       ),
     );
 
-    void sendToFirebase(){
+    Future<void> sendToFirebase() async {
       String explanation = _textController.text;
       String loc = jsonEncode(Location.location).toString();
-      const url = 'https://strathfeed.firebaseio.com/feedback/positive.json';
+
+      final prefs = await SharedPreferences.getInstance();
+      final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
+      final user = extractedUserData['userId'];
+
+      String url = 'https://strathfeed.firebaseio.com/feedback.json';
+
+      url = 'https://strathfeed.firebaseio.com/feedback.json';
       http.post(url,body: json.encode({
         'explanation': explanation,
         'loc': loc,
+        'user':user,
+        'status': "unseen",
         'time': DateTime.now().toIso8601String()
       }),).then((response){
 

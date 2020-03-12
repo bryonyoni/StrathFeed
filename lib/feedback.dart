@@ -4,6 +4,9 @@ class myFeedback{
   Location location;
   String description;
   String sentiment;
+  String user;
+  String pushId;
+  String status;
   DateTime timeOfSending;
 
   static List<sugestedItem> loadSomeSuggestedItems(String areaClass){
